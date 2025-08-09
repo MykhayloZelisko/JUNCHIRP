@@ -1,0 +1,121 @@
+@use '@/assets/styles/variables';
+
+.education-multi-select {
+  position: relative;
+  min-width: 0;
+
+  &__label {
+    display: block;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: variables.$gray-10;
+  }
+
+  &__button {
+    justify-content: space-between;
+    background-color: variables.$white-2;
+    border: 1px solid variables.$gray-8;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 400;
+    height: 42px;
+    box-sizing: border-box;
+    cursor: default;
+    max-width: 100%;
+
+    &:focus,
+    &--focused {
+      border-color: variables.$green-6;
+      box-shadow: 0 0 0 4px variables.$green-4;
+    }
+  }
+
+  &__selected {
+    color: variables.$black-2;
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: start;
+  }
+
+  &__list {
+    position: absolute;
+    background-color: variables.$white-2;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid variables.$gray-8;
+    z-index: 10;
+    max-height: 205px;
+
+    &:has(li:nth-child(6)) {
+      overflow-y: scroll;
+      border-radius: 8px 0 0 8px;
+    }
+  }
+
+  &__item {
+    padding: 12px 16px;
+
+    &:first-child {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    &:hover {
+      background-color: variables.$gray-5;
+
+      & .education-multi-select__icon {
+        color: variables.$green-2;
+      }
+    }
+
+    &:active {
+      & .education-multi-select__icon {
+        box-shadow: 0 0 0 4px variables.$green-4;
+        color: variables.$green-2;
+      }
+    }
+
+    &--selected {
+      background-color: variables.$gray-5;
+    }
+  }
+
+  &__checkbox {
+    display: none;
+  }
+
+  &__checkbox-label {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  &__checkbox-label-text {
+    display: block;
+    font-size: 14px;
+    line-height: 1.2;
+    cursor: default;
+  }
+
+  &__icon {
+    border-radius: 4px;
+    height: 16px;
+    width: 16px;
+    color: variables.$gray-8;
+  }
+}

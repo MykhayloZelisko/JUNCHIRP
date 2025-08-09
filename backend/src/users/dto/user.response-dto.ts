@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleResponseDto } from '../../roles/dto/role.response-dto';
-// import { SocialResponseDto } from '../../socials/dto/social.response-dto';
-// import { SoftSkillResponseDto } from '../../soft-skills/dto/soft-skill.response-dto';
-// import { HardSkillResponseDto } from '../../hard-skills/dto/hard-skill.response-dto';
+import { SocialResponseDto } from '../../socials/dto/social.response-dto';
+import { SoftSkillResponseDto } from '../../soft-skills/dto/soft-skill.response-dto';
+import { HardSkillResponseDto } from '../../hard-skills/dto/hard-skill.response-dto';
 import { UserCardResponseDto } from './user-card.response-dto';
 
 export class UserResponseDto extends UserCardResponseDto {
@@ -29,12 +29,12 @@ export class UserResponseDto extends UserCardResponseDto {
   @ApiProperty({ type: () => RoleResponseDto })
   public readonly role: RoleResponseDto;
 
-  // @ApiProperty({ type: () => [SocialResponseDto] })
-  // public readonly socials: SocialResponseDto[];
-  //
-  // @ApiProperty({ type: () => [SoftSkillResponseDto] })
-  // public readonly softSkills: SoftSkillResponseDto[];
-  //
-  // @ApiProperty({ type: () => [HardSkillResponseDto] })
-  // public readonly hardSkills: HardSkillResponseDto[];
+  @ApiProperty({ type: () => [SocialResponseDto] })
+  public readonly socials: SocialResponseDto[];
+
+  @ApiProperty({ type: () => [SoftSkillResponseDto] })
+  public readonly softSkills: SoftSkillResponseDto[];
+
+  @ApiProperty({ type: () => [HardSkillResponseDto] })
+  public readonly hardSkills: HardSkillResponseDto[];
 }

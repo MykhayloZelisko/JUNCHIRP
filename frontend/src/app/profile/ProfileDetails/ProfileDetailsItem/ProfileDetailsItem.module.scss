@@ -1,0 +1,49 @@
+@use '@/assets/styles/variables';
+
+.profile-details-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  &__link {
+    color: variables.$black-2;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  &__text {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    &--gray {
+      color: variables.$gray-6;
+      font-weight: 400;
+    }
+  }
+
+  &__education {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__actions {
+    position: relative;
+    top: 3px;
+    display: flex;
+    gap: 8px;
+  }
+
+  &__social {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  &__no-icon {
+    width: 20px;
+    height: 20px;
+  }
+}

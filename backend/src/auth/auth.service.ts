@@ -18,6 +18,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TooManyRequestsException } from '../shared/exceptions/too-many-requests.exception';
 import { RedisService } from '../redis/redis.service';
 import { MessageResponseDto } from '../users/dto/message.response-dto';
+import { LoggerService } from '../logger/logger.service';
+import { DiscordService } from '../discord/discord.service';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +37,8 @@ export class AuthService {
     private jwtService: JwtService,
     private prisma: PrismaService,
     private redisService: RedisService,
+    private loggerService: LoggerService,
+    private discordService: DiscordService,
   ) {}
 
   public async validateUser(
@@ -45,8 +49,18 @@ export class AuthService {
       loginDto.email,
       true,
     )) as UserWithPasswordResponseDto | null;
+    const ip =
+      req.ip ??
+      req.headers['x-forwarded-for']?.toString().split(',')[0]?.trim() ??
+      req.socket.remoteAddress;
 
     if (!user) {
+      await this.loggerService.log(
+        ip ?? 'unknown',
+        loginDto.email,
+        'login',
+        'Email or password is incorrect',
+      );
       throw new UnauthorizedException('Email or password is incorrect');
     }
 
@@ -57,6 +71,12 @@ export class AuthService {
     if (loginAttempt) {
       const now = new Date();
       if (loginAttempt.blockedUntil && now < loginAttempt.blockedUntil) {
+        await this.loggerService.log(
+          ip ?? 'unknown',
+          loginDto.email,
+          'login',
+          'Too many failed attempts. Please try again later',
+        );
         throw new TooManyRequestsException(
           'Too many failed attempts. Please try again later',
           loginAttempt.attemptsCount,
@@ -115,6 +135,12 @@ export class AuthService {
         });
 
         if ([5, 10, 15].includes(updateData.attemptsCount)) {
+          await this.loggerService.log(
+            ip ?? 'unknown',
+            loginDto.email,
+            'login',
+            'Too many failed attempts. Please try again later',
+          );
           throw new TooManyRequestsException(
             'Too many failed attempts. Please try again later',
             updateData.attemptsCount,
@@ -128,6 +154,13 @@ export class AuthService {
           },
         });
       }
+
+      await this.loggerService.log(
+        ip ?? 'unknown',
+        loginDto.email,
+        'login',
+        'Email or password is incorrect',
+      );
       throw new UnauthorizedException('Email or password is incorrect');
     }
   }
@@ -144,6 +177,13 @@ export class AuthService {
     this.addAccessTokenToResponse(res, accessToken);
     const { password, ...userWithoutPassword } = user;
 
+    await this.loggerService.log(
+      ip,
+      user.email,
+      'login',
+      'User login successfully',
+    );
+
     return userWithoutPassword;
   }
 
@@ -159,6 +199,13 @@ export class AuthService {
         password: hashPassword,
       },
       ip,
+    );
+
+    await this.loggerService.log(
+      ip,
+      createUserDto.email,
+      'registration',
+      'User registered successfully',
     );
 
     const { accessToken, refreshToken } = this.createTokens(user.id);
@@ -312,12 +359,163 @@ export class AuthService {
   ): Promise<MessageResponseDto> {
     const accessToken = req.cookies['accessToken'];
     const refreshToken = req.cookies['refreshToken'];
+    const user = req.user as UserResponseDto;
 
     try {
       await this.clearTokens(accessToken, refreshToken, res);
+
+      await this.loggerService.log(
+        ip,
+        user.email,
+        'logout',
+        'Logged out successfully',
+      );
       return { message: 'Logged out successfully' };
     } catch (error) {
+      await this.loggerService.log(
+        ip,
+        user.email,
+        'logout',
+        'Token is invalid',
+      );
       throw new UnauthorizedException(`Token is invalid: ${error}`);
+    }
+  }
+
+  public async googleLogin(
+    ip: string,
+    req: Request,
+    res: Response,
+  ): Promise<UserResponseDto> {
+    if (!req.user) {
+      await this.loggerService.log(
+        ip,
+        'unknown',
+        'google login',
+        'Google authentication failed',
+      );
+      throw new UnauthorizedException('Google authentication failed');
+    }
+
+    const reqUser = req.user as {
+      googleId: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      picture: string;
+      accessToken: string;
+      refreshToken: string;
+    };
+
+    const user = await this.usersService.createOrUpdateGoogleUser(ip, reqUser);
+    const { accessToken, refreshToken } = this.createTokens(user.id);
+    this.addRefreshTokenToResponse(res, refreshToken);
+    this.addAccessTokenToResponse(res, accessToken);
+
+    await this.loggerService.log(
+      ip,
+      'unknown',
+      'google login',
+      'Google authentication successfully',
+    );
+
+    return user;
+  }
+
+  public async handleDiscordCallback(
+    req: Request,
+    res: Response,
+    state: string,
+  ): Promise<void> {
+    const frontendBaseUrl =
+      this.configService.get<string>('BASE_FRONTEND_URL') ??
+      'https://localhost:3000';
+
+    const fallbackRedirect = `${frontendBaseUrl}/?error=discord_auth_failed`;
+
+    try {
+      const data = await this.redisService.get(state);
+      if (!data) {
+        return res.redirect(fallbackRedirect);
+      }
+
+      const { userId, returnUrl } = JSON.parse(data);
+      const safeReturnUrl = this.getSafeReturnUrl(returnUrl);
+      const redirectBase = `${frontendBaseUrl}${safeReturnUrl}`;
+
+      const { discordId, accessToken } = req.user as {
+        discordId: string;
+        accessToken: string;
+      };
+
+      await this.discordService.addToGuild(discordId, accessToken);
+      await this.usersService.linkDiscord(userId, discordId);
+      await this.redisService.del(state);
+
+      return res.redirect(redirectBase);
+    } catch {
+      return res.redirect(fallbackRedirect);
+    }
+  }
+
+  public async handleGoogleCallback(
+    ip: string,
+    req: Request,
+    res: Response,
+    state: string,
+  ): Promise<void> {
+    const frontendBaseUrl =
+      this.configService.get<string>('BASE_FRONTEND_URL') ??
+      'https://localhost:3000';
+
+    const redirectWithError = (returnUrl: string): void => {
+      const safeUrl = this.getSafeReturnUrl(returnUrl);
+      const finalUrl = `${frontendBaseUrl}${safeUrl}?error=google_auth_failed`;
+      return res.redirect(finalUrl);
+    };
+
+    try {
+      const data = await this.redisService.get(state);
+      if (!data) {
+        return redirectWithError('/');
+      }
+
+      const { returnUrl } = JSON.parse(data);
+      const safeReturnUrl = this.getSafeReturnUrl(returnUrl);
+      const user = await this.googleLogin(ip, req, res);
+      let redirectUrl: string;
+
+      if (user.isVerified) {
+        redirectUrl = `${frontendBaseUrl}`;
+      } else if (safeReturnUrl.startsWith('/auth/login')) {
+        redirectUrl = `${frontendBaseUrl}/confirm-email?type=login`;
+      } else if (safeReturnUrl.startsWith('/auth/registration')) {
+        redirectUrl = `${frontendBaseUrl}/confirm-email?type=registration`;
+      } else {
+        redirectUrl = `${frontendBaseUrl}`;
+      }
+
+      await this.redisService.del(state);
+
+      return res.redirect(redirectUrl);
+    } catch {
+      try {
+        const fallback = await this.redisService.get(state);
+        const parsed = fallback ? JSON.parse(fallback) : {};
+        const returnUrl = parsed?.returnUrl ?? '/';
+        return redirectWithError(returnUrl);
+      } catch {
+        return redirectWithError('/');
+      }
+    }
+  }
+
+  private getSafeReturnUrl(url: string | undefined): string {
+    try {
+      const decoded = decodeURIComponent(url ?? '');
+      return decoded.startsWith('/') ? decoded : '/';
+    } catch {
+      return '/';
     }
   }
 }

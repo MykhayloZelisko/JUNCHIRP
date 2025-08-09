@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-// import { EducationResponseDto } from '../../educations/dto/education.response-dto';
+import { EducationResponseDto } from '../../educations/dto/education.response-dto';
 
 export class UserCardResponseDto {
   @ApiProperty({
@@ -20,6 +20,6 @@ export class UserCardResponseDto {
   @ApiProperty({ example: 2, description: 'Number of active projects' })
   public readonly activeProjectsCount: number;
 
-  // @ApiProperty({ type: () => [EducationResponseDto] })
-  // public readonly educations: EducationResponseDto[];
+  @ApiProperty({ type: () => [EducationResponseDto] })
+  public readonly educations: EducationResponseDto[];
 }

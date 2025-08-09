@@ -29,7 +29,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { UserMapper } from '../shared/mappers/user.mapper';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { ProjectsService } from '../projects/projects.service';
+import { ProjectsListResponseDto } from '../projects/dto/projects-list.response-dto';
 import { UsersListResponseDto } from './dto/users-list.response-dto';
+import { ParticipationsService } from '../participations/participations.service';
+import { ProjectParticipationResponseDto } from '../participations/dto/project-participation.response-dto';
+import { LoggerService } from '../logger/logger.service';
 import { Request, Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { EmailValidationResponseDto } from './dto/email-validation.response-dto';
@@ -51,6 +56,9 @@ export class UsersService {
     private mailService: MailService,
     private rolesService: RolesService,
     private cloudinaryService: CloudinaryService,
+    private projectsService: ProjectsService,
+    private participationsService: ParticipationsService,
+    private loggerService: LoggerService,
     private authService: AuthService,
   ) {}
 
@@ -92,21 +100,21 @@ export class UsersService {
           error instanceof PrismaClientKnownRequestError &&
           error.code === 'P2002'
         ) {
-          // await this.loggerService.log(
-          //   ip,
-          //   createUserDto.email,
-          //   'registration',
-          //   'User with this email already exists',
-          // );
+          await this.loggerService.log(
+            ip,
+            createUserDto.email,
+            'registration',
+            'User with this email already exists',
+          );
           throw new ConflictException('User with this email already exists');
         }
 
-        // await this.loggerService.log(
-        //   ip,
-        //   createUserDto.email,
-        //   'registration',
-        //   'Something went wrong. Please try again later',
-        // );
+        await this.loggerService.log(
+          ip,
+          createUserDto.email,
+          'registration',
+          'Something went wrong. Please try again later',
+        );
 
         throw error;
       }
@@ -171,12 +179,12 @@ export class UsersService {
     const user = await this.getUserByEmail(email, false);
 
     if (!user) {
-      // await this.loggerService.log(
-      //   ip,
-      //   email,
-      //   'confirmation email',
-      //   'User with this email not found',
-      // );
+      await this.loggerService.log(
+        ip,
+        email,
+        'confirmation email',
+        'User with this email not found',
+      );
       throw new NotFoundException('User not found');
     }
 
@@ -189,12 +197,12 @@ export class UsersService {
     });
 
     if (count >= 5) {
-      // await this.loggerService.log(
-      //   ip,
-      //   email,
-      //   'confirmation email',
-      //   'You have used up all your attempts. Please try again later.',
-      // );
+      await this.loggerService.log(
+        ip,
+        email,
+        'confirmation email',
+        'You have used up all your attempts. Please try again later.',
+      );
       throw new TooManyRequestsException(
         'You have used up all your attempts. Please try again later.',
       );
@@ -246,12 +254,12 @@ export class UsersService {
       console.error('Error sending verification url:', err);
     });
 
-    // await this.loggerService.log(
-    //   ip,
-    //   email,
-    //   'confirmation email',
-    //   'Confirmation email sent successfully',
-    // );
+    await this.loggerService.log(
+      ip,
+      email,
+      'confirmation email',
+      'Confirmation email sent successfully',
+    );
 
     return { message: 'Confirmation email sent. Please check your inbox.' };
   }
@@ -277,28 +285,28 @@ export class UsersService {
       if (decoded?.id) {
         const user = await this.getUserById(decoded.id).catch(() => null);
         if (!user) {
-          // await this.loggerService.log(
-          //   ip,
-          //   decoded.email ?? '',
-          //   'confirmation email',
-          //   'User not found',
-          // );
+          await this.loggerService.log(
+            ip,
+            decoded.email ?? '',
+            'confirmation email',
+            'User not found',
+          );
           throw new NotFoundException('User not found');
         }
 
-        // await this.loggerService.log(
-        //   ip,
-        //   decoded.email ?? '',
-        //   'confirmation email',
-        //   'Invalid or expired verification token',
-        // );
+        await this.loggerService.log(
+          ip,
+          decoded.email ?? '',
+          'confirmation email',
+          'Invalid or expired verification token',
+        );
       } else {
-        // await this.loggerService.log(
-        //   ip,
-        //   '',
-        //   'confirmation email',
-        //   'Invalid or expired verification token',
-        // );
+        await this.loggerService.log(
+          ip,
+          '',
+          'confirmation email',
+          'Invalid or expired verification token',
+        );
       }
 
       throw new BadRequestException('Invalid or expired verification token');
@@ -315,12 +323,12 @@ export class UsersService {
         } | null;
 
         if (!decoded?.id) {
-          // await this.loggerService.log(
-          //   ip,
-          //   '',
-          //   'confirmation email',
-          //   'Invalid or expired verification token',
-          // );
+          await this.loggerService.log(
+            ip,
+            '',
+            'confirmation email',
+            'Invalid or expired verification token',
+          );
           throw new BadRequestException(
             'Invalid or expired verification token',
           );
@@ -328,21 +336,21 @@ export class UsersService {
 
         const user = await this.getUserById(decoded.id).catch(() => null);
         if (!user) {
-          // await this.loggerService.log(
-          //   ip,
-          //   decoded.email ?? '',
-          //   'confirmation email',
-          //   'User not found',
-          // );
+          await this.loggerService.log(
+            ip,
+            decoded.email ?? '',
+            'confirmation email',
+            'User not found',
+          );
           throw new NotFoundException('User not found');
         }
 
-        // await this.loggerService.log(
-        //   ip,
-        //   decoded.email ?? '',
-        //   'confirmation email',
-        //   'Invalid or expired verification token',
-        // );
+        await this.loggerService.log(
+          ip,
+          decoded.email ?? '',
+          'confirmation email',
+          'Invalid or expired verification token',
+        );
         throw new BadRequestException('Invalid or expired verification token');
       }
 
@@ -350,12 +358,12 @@ export class UsersService {
     }
 
     if (payload.email !== email) {
-      // await this.loggerService.log(
-      //   ip,
-      //   email,
-      //   'confirmation email',
-      //   'Email does not match token',
-      // );
+      await this.loggerService.log(
+        ip,
+        email,
+        'confirmation email',
+        'Email does not match token',
+      );
       throw new BadRequestException(
         'Email does not match token',
         'Validation Error',
@@ -363,12 +371,12 @@ export class UsersService {
     }
 
     if (!verificationToken.userId) {
-      // await this.loggerService.log(
-      //   ip,
-      //   payload.email,
-      //   'confirmation email',
-      //   'User not found',
-      // );
+      await this.loggerService.log(
+        ip,
+        payload.email,
+        'confirmation email',
+        'User not found',
+      );
       throw new NotFoundException('User not found');
     }
 
@@ -385,24 +393,24 @@ export class UsersService {
           data: { isVerified: true },
         });
 
-        // await this.loggerService.log(
-        //   ip,
-        //   payload.email,
-        //   'confirmation email',
-        //   'Email verified successfully',
-        // );
+        await this.loggerService.log(
+          ip,
+          payload.email,
+          'confirmation email',
+          'Email verified successfully',
+        );
       });
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        // await this.loggerService.log(
-        //   ip,
-        //   payload.email,
-        //   'confirmation email',
-        //   'User not found',
-        // );
+        await this.loggerService.log(
+          ip,
+          payload.email,
+          'confirmation email',
+          'User not found',
+        );
         throw new NotFoundException('User not found');
       }
 
@@ -431,12 +439,12 @@ export class UsersService {
       console.error('Error sending verification url:', err);
     });
 
-    // await this.loggerService.log(
-    //   ip,
-    //   email,
-    //   'reset password',
-    //   'Password reset link sent successfully',
-    // );
+    await this.loggerService.log(
+      ip,
+      email,
+      'reset password',
+      'Password reset link sent successfully',
+    );
 
     return { message: 'Password reset link has been sent to your email.' };
   }
@@ -448,12 +456,12 @@ export class UsersService {
     const user = await this.getUserByEmail(email, false);
 
     if (!user) {
-      // await this.loggerService.log(
-      //   ip,
-      //   email,
-      //   'reset password',
-      //   'User with this email not found',
-      // );
+      await this.loggerService.log(
+        ip,
+        email,
+        'reset password',
+        'User with this email not found',
+      );
       throw new NotFoundException('User not found');
     }
 
@@ -462,12 +470,12 @@ export class UsersService {
     });
 
     if (count >= 5) {
-      // await this.loggerService.log(
-      //   ip,
-      //   email,
-      //   'reset password',
-      //   'You have used up all your attempts. Please try again later',
-      // );
+      await this.loggerService.log(
+        ip,
+        email,
+        'reset password',
+        'You have used up all your attempts. Please try again later',
+      );
       throw new TooManyRequestsException(
         'You have used up all your attempts. Please try again later',
       );
@@ -520,28 +528,28 @@ export class UsersService {
       try {
         const payload = this.jwtService.verify(resetPasswordToken.token);
         const userId = payload.id;
-        // const hashPassword = await bcrypt.hash(resetPasswordDto.password, 10);
+        const hashPassword = await bcrypt.hash(resetPasswordDto.password, 10);
 
         await prisma.resetPasswordToken.delete({ where: { userId } });
-        // const user = await prisma.user.update({
-        //   where: { id: resetPasswordToken.userId },
-        //   data: { password: hashPassword },
-        // });
-        // await this.loggerService.log(
-        //   ip,
-        //   user.email,
-        //   'reset password',
-        //   'Password reset successfully',
-        // );
+        const user = await prisma.user.update({
+          where: { id: resetPasswordToken.userId },
+          data: { password: hashPassword },
+        });
+        await this.loggerService.log(
+          ip,
+          user.email,
+          'reset password',
+          'Password reset successfully',
+        );
       } catch (error) {
-        // const payload = this.jwtService.verify(resetPasswordToken.token);
-        // const email = payload.email;
-        // await this.loggerService.log(
-        //   ip,
-        //   email,
-        //   'reset password',
-        //   'Invalid or expired token',
-        // );
+        const payload = this.jwtService.verify(resetPasswordToken.token);
+        const email = payload.email;
+        await this.loggerService.log(
+          ip,
+          email,
+          'reset password',
+          'Invalid or expired token',
+        );
         if (error.name === 'TokenExpiredError') {
           throw new BadRequestException('Invalid or expired token');
         }
@@ -679,108 +687,108 @@ export class UsersService {
     }
   }
 
-  // public async getUserProjects(
-  //   userId: string,
-  //   page = 1,
-  //   limit = 20,
-  //   status?: ProjectStatus,
-  // ): Promise<ProjectsListResponseDto> {
-  //   return this.projectsService.getProjects({ userId, page, limit, status });
-  // }
-  //
-  // public async getUsers(
-  //   options: Partial<GetUsersOptionsInterface>,
-  // ): Promise<UsersListResponseDto> {
-  //   const {
-  //     activeProjectsCount,
-  //     specializationIds,
-  //     page = 1,
-  //     limit = 20,
-  //   } = options;
-  //
-  //   const skip = (page - 1) * limit;
-  //
-  //   const where: Prisma.UserWhereInput = {
-  //     isVerified: true,
-  //     ...(specializationIds?.length
-  //       ? {
-  //           educations: {
-  //             some: {
-  //               specializationId: { in: specializationIds },
-  //             },
-  //           },
-  //         }
-  //       : {}),
-  //     ...(typeof activeProjectsCount === 'number'
-  //       ? {
-  //           activeProjectsCount: activeProjectsCount,
-  //         }
-  //       : {}),
-  //   };
-  //
-  //   const [users, total] = await this.prisma.$transaction([
-  //     this.prisma.user.findMany({
-  //       where,
-  //       include: {
-  //         educations: {
-  //           include: {
-  //             specialization: true,
-  //           },
-  //         },
-  //       },
-  //       skip,
-  //       take: limit,
-  //       orderBy: { createdAt: 'desc' },
-  //     }),
-  //     this.prisma.user.count({ where }),
-  //   ]);
-  //
-  //   return {
-  //     total,
-  //     users: users.map((user) => UserMapper.toCardResponse(user)),
-  //   };
-  // }
-  //
-  // public async getInvites(
-  //   userId: string,
-  // ): Promise<ProjectParticipationResponseDto[]> {
-  //   return this.participationsService.getInvitesWithProjects(userId);
-  // }
-  //
-  // public async getRequests(
-  //   userId: string,
-  //   ownerId?: string,
-  // ): Promise<ProjectParticipationResponseDto[]> {
-  //   return this.participationsService.getRequestsWithProjects(userId, ownerId);
-  // }
-  //
-  // public async linkDiscord(id: string, discordId: string): Promise<void> {
-  //   try {
-  //     await this.prisma.user.update({
-  //       where: { id },
-  //       data: { discordId },
-  //       include: {
-  //         role: true,
-  //         educations: {
-  //           include: {
-  //             specialization: true,
-  //           },
-  //         },
-  //         socials: true,
-  //         softSkills: true,
-  //         hardSkills: true,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     if (
-  //       error instanceof PrismaClientKnownRequestError &&
-  //       error.code === 'P2025'
-  //     ) {
-  //       throw new NotFoundException('User not found');
-  //     }
-  //     throw error;
-  //   }
-  // }
+  public async getUserProjects(
+    userId: string,
+    page = 1,
+    limit = 20,
+    status?: ProjectStatus,
+  ): Promise<ProjectsListResponseDto> {
+    return this.projectsService.getProjects({ userId, page, limit, status });
+  }
+
+  public async getUsers(
+    options: Partial<GetUsersOptionsInterface>,
+  ): Promise<UsersListResponseDto> {
+    const {
+      activeProjectsCount,
+      specializationIds,
+      page = 1,
+      limit = 20,
+    } = options;
+
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.UserWhereInput = {
+      isVerified: true,
+      ...(specializationIds?.length
+        ? {
+            educations: {
+              some: {
+                specializationId: { in: specializationIds },
+              },
+            },
+          }
+        : {}),
+      ...(typeof activeProjectsCount === 'number'
+        ? {
+            activeProjectsCount: activeProjectsCount,
+          }
+        : {}),
+    };
+
+    const [users, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where,
+        include: {
+          educations: {
+            include: {
+              specialization: true,
+            },
+          },
+        },
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      total,
+      users: users.map((user) => UserMapper.toCardResponse(user)),
+    };
+  }
+
+  public async getInvites(
+    userId: string,
+  ): Promise<ProjectParticipationResponseDto[]> {
+    return this.participationsService.getInvitesWithProjects(userId);
+  }
+
+  public async getRequests(
+    userId: string,
+    ownerId?: string,
+  ): Promise<ProjectParticipationResponseDto[]> {
+    return this.participationsService.getRequestsWithProjects(userId, ownerId);
+  }
+
+  public async linkDiscord(id: string, discordId: string): Promise<void> {
+    try {
+      await this.prisma.user.update({
+        where: { id },
+        data: { discordId },
+        include: {
+          role: true,
+          educations: {
+            include: {
+              specialization: true,
+            },
+          },
+          socials: true,
+          softSkills: true,
+          hardSkills: true,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('User not found');
+      }
+      throw error;
+    }
+  }
 
   public async checkEmailAvailable(
     email: string,

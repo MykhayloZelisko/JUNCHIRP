@@ -1,0 +1,19 @@
+@use '@/assets/styles/variables';
+
+.active-users-filters {
+  display: flex;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &__item {
+    background-color: variables.$gray-1;
+    border-radius: 8px;
+    padding: 4px 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}

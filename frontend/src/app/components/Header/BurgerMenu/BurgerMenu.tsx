@@ -7,7 +7,11 @@ import Close from '@/assets/icons/close.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/api/authApi';
+import { setEducations } from '@/redux/educations/educationsSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
+import { setHardSkills } from '@/redux/hardSkills/hardSkillsSlice';
+import { setSocials } from '@/redux/socials/socialsSlice';
+import { setSoftSkills } from '@/redux/softSkills/softSkillsSlice';
 
 export default function BurgerMenu(): ReactElement {
   const router = useRouter();
@@ -50,6 +54,10 @@ export default function BurgerMenu(): ReactElement {
 
   const handleLogout = (): void => {
     logout(undefined);
+    dispatch(setEducations([]));
+    dispatch(setSoftSkills([]));
+    dispatch(setHardSkills([]));
+    dispatch(setSocials([]));
     closeMenu();
   };
 

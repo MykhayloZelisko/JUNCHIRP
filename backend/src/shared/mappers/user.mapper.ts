@@ -8,6 +8,10 @@ import {
   UserSoftSkill,
 } from '@prisma/client';
 import { UserResponseDto } from '../../users/dto/user.response-dto';
+import { EducationMapper } from './education.mapper';
+import { SocialMapper } from './social.mapper';
+import { SoftSkillMapper } from './soft-skill.mapper';
+import { HardSkillMapper } from './hard-skill.mapper';
 import { UserWithPasswordResponseDto } from '../../users/dto/user-with-password.response-dto';
 import { UserCardResponseDto } from '../../users/dto/user-card.response-dto';
 
@@ -33,10 +37,16 @@ export class UserMapper {
       isVerified: user.isVerified,
       role: user.role,
       activeProjectsCount: user.activeProjectsCount,
-      // educations: [],
-      // socials: [],
-      // softSkills: [],
-      // hardSkills: [],
+      educations: user.educations.map((education) =>
+        EducationMapper.toResponse(education),
+      ),
+      socials: user.socials.map((social) => SocialMapper.toResponse(social)),
+      softSkills: user.softSkills.map((skill) =>
+        SoftSkillMapper.toResponse(skill),
+      ),
+      hardSkills: user.hardSkills.map((skill) =>
+        HardSkillMapper.toResponse(skill),
+      ),
     };
 
     return withPassword
@@ -57,7 +67,9 @@ export class UserMapper {
       firstName: user.firstName,
       lastName: user.lastName,
       avatarUrl: user.avatarUrl,
-      // educations: [],
+      educations: user.educations.map((education) =>
+        EducationMapper.toResponse(education),
+      ),
       activeProjectsCount: user.activeProjectsCount,
     };
   }

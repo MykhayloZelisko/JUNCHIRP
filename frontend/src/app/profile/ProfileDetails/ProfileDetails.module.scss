@@ -1,0 +1,72 @@
+@use '@/assets/styles/variables';
+
+.profile-details {
+  display: flex;
+  align-items: flex-start;
+  background-color: variables.$gray-1;
+  border-radius: 32px;
+  padding: 40px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__divider {
+    height: 4px;
+    background-color: variables.$green-2;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.4;
+  }
+
+  &__title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &--empty {
+      align-items: center;
+      gap: 32px;
+    }
+
+    &--full {
+      gap: 24px;
+    }
+  }
+
+  &__counter {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  &__total {
+    color: variables.$gray-4;
+  }
+
+  &__toggle {
+    align-self: center;
+  }
+}

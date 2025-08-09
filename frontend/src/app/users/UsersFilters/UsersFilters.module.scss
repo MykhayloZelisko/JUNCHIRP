@@ -1,0 +1,22 @@
+@use '@/assets/styles/variables';
+
+.users-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 32px;
+  padding: 0 40px;
+  
+  &__title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  &__border {
+    height: 4px;
+    background-color: variables.$green-2;
+    border-radius: 4px;
+  }
+}

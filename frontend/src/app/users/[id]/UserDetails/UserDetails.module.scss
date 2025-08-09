@@ -1,0 +1,46 @@
+@use '@/assets/styles/variables';
+
+.user-details {
+  grid-column: span 1;
+  border-radius: 32px;
+  padding: 40px;
+  background-color: variables.$gray-1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 32px;
+
+  &--two-columns {
+    grid-column: span 2;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    &--two-columns {
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 32px;
+    }
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.4;
+  }
+
+  &__border {
+    height: 4px;
+    border-radius: 4px;
+    width: 100%;
+    background-color: variables.$green-2;
+  }
+}

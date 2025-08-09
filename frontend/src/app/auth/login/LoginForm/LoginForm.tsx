@@ -14,8 +14,13 @@ import { UserInterface } from '@/shared/interfaces/user.interface';
 import { useToast } from '@/hooks/useToast';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { useLazyGetProjectRolesListQuery } from '@/api/projectRolesApi';
 import { useSupport } from '@/hooks/useSupport';
 import { useAppDispatch } from '@/hooks/reduxHooks';
+import { setEducations } from '@/redux/educations/educationsSlice';
+import { setHardSkills } from '@/redux/hardSkills/hardSkillsSlice';
+import { setSocials } from '@/redux/socials/socialsSlice';
+import { setSoftSkills } from '@/redux/softSkills/softSkillsSlice';
 
 const schema = z.object({
   email: z.string().trim().nonempty('Поле не може бути порожнім'),
@@ -37,6 +42,7 @@ export default function LoginForm(): ReactElement {
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
   const toast = useToast();
+  const [loadRoles] = useLazyGetProjectRolesListQuery();
   const support = useSupport();
   const dispatch = useAppDispatch();
 
@@ -46,6 +52,14 @@ export default function LoginForm(): ReactElement {
 
   const onSubmit = async (data: FormData): Promise<void> => {
     const result = await login(data);
+
+    if ('data' in result) {
+      const user = result.data;
+      dispatch(setEducations(user.educations));
+      dispatch(setSoftSkills(user.softSkills));
+      dispatch(setHardSkills(user.hardSkills));
+      dispatch(setSocials(user.socials));
+    }
 
     if ('error' in result) {
       const errorData = result.error as
@@ -143,6 +157,7 @@ export default function LoginForm(): ReactElement {
     const user: UserInterface = result.data;
 
     if (user.isVerified) {
+      await loadRoles(undefined);
       router.push('/');
     } else {
       router.push('/confirm-email?type=login');

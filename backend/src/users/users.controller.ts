@@ -6,7 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Ip,
-  // Param,
+  Param,
   Patch,
   Post,
   Query,
@@ -37,13 +37,13 @@ import { Request, Response } from 'express';
 import { UserWithPasswordResponseDto } from './dto/user-with-password.response-dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-// import { ProjectsListResponseDto } from '../projects/dto/projects-list.response-dto';
-// import { UserProjectsFilterDto } from './dto/user-projects-filter.dto';
-// import { ParseUUIDv4Pipe } from '../shared/pipes/parse-UUIDv4/parse-UUIDv4.pipe';
-// import { UsersListResponseDto } from './dto/users-list.response-dto';
-// import { UsersFilterDto } from './dto/users-filter.dto';
-// import { ProjectParticipationResponseDto } from '../participations/dto/project-participation.response-dto';
-// import { User } from '../auth/decorators/user.decorator';
+import { ProjectsListResponseDto } from '../projects/dto/projects-list.response-dto';
+import { UserProjectsFilterDto } from './dto/user-projects-filter.dto';
+import { ParseUUIDv4Pipe } from '../shared/pipes/parse-UUIDv4/parse-UUIDv4.pipe';
+import { UsersListResponseDto } from './dto/users-list.response-dto';
+import { UsersFilterDto } from './dto/users-filter.dto';
+import { ProjectParticipationResponseDto } from '../participations/dto/project-participation.response-dto';
+import { User } from '../auth/decorators/user.decorator';
 import { EmailValidationResponseDto } from './dto/email-validation.response-dto';
 import { TokenValidationResponseDto } from './dto/token-validation.response-dto';
 
@@ -198,108 +198,108 @@ export class UsersController {
     return this.usersService.updateUser(user.id, ip, updateUserDto);
   }
 
-  // @User()
-  // @ApiOperation({
-  //   summary: 'Get projects of current user',
-  // })
-  // @ApiOkResponse({ type: ProjectsListResponseDto })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @UsePipes(ValidationPipe)
-  // @Get('me/projects')
-  // public async getMyProjects(
-  //   @Req() req: Request,
-  //   @Query() query: UserProjectsFilterDto,
-  // ): Promise<ProjectsListResponseDto> {
-  //   const user: UserWithPasswordResponseDto =
-  //     req.user as UserWithPasswordResponseDto;
-  //   return this.usersService.getUserProjects(
-  //     user.id,
-  //     query.page,
-  //     query.limit,
-  //     query.status,
-  //   );
-  // }
-  //
-  // @User()
-  // @ApiOperation({
-  //   summary: 'Get user projects',
-  // })
-  // @ApiOkResponse({ type: ProjectsListResponseDto })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @Get(':id/projects')
-  // public async getUserProjects(
-  //   @Param('id', ParseUUIDv4Pipe) id: string,
-  //   @Query(ValidationPipe) query: UserProjectsFilterDto,
-  // ): Promise<ProjectsListResponseDto> {
-  //   return this.usersService.getUserProjects(
-  //     id,
-  //     query.page,
-  //     query.limit,
-  //     query.status,
-  //   );
-  // }
-  //
-  // @User()
-  // @ApiOperation({ summary: 'Get user by id' })
-  // @ApiOkResponse({ type: UserResponseDto })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiNotFoundResponse({ description: 'User not found' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @Get(':id')
-  // public async getUserById(
-  //   @Param('id', ParseUUIDv4Pipe) id: string,
-  // ): Promise<UserResponseDto> {
-  //   return this.usersService.getUserById(id);
-  // }
-  //
-  // @User()
-  // @ApiOperation({
-  //   summary: 'Get list of users with filters and pagination',
-  // })
-  // @ApiOkResponse({ type: UsersListResponseDto })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @UsePipes(ValidationPipe)
-  // @Get('')
-  // public async getUsers(
-  //   @Query() query: UsersFilterDto,
-  // ): Promise<UsersListResponseDto> {
-  //   return this.usersService.getUsers(query);
-  // }
-  //
-  // @User()
-  // @ApiOperation({
-  //   summary: 'Get current user invites',
-  // })
-  // @ApiOkResponse({ type: [ProjectParticipationResponseDto] })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @Get('me/invites')
-  // public async getInvites(
-  //   @Req() req: Request,
-  // ): Promise<ProjectParticipationResponseDto[]> {
-  //   const user: UserWithPasswordResponseDto =
-  //     req.user as UserWithPasswordResponseDto;
-  //   return this.usersService.getInvites(user.id);
-  // }
-  //
-  // @User()
-  // @ApiOperation({
-  //   summary: 'Get current user requests',
-  // })
-  // @ApiOkResponse({ type: [ProjectParticipationResponseDto] })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @Get('me/requests')
-  // public async getRequests(
-  //   @Req() req: Request,
-  // ): Promise<ProjectParticipationResponseDto[]> {
-  //   const user: UserWithPasswordResponseDto =
-  //     req.user as UserWithPasswordResponseDto;
-  //   return this.usersService.getRequests(user.id);
-  // }
+  @User()
+  @ApiOperation({
+    summary: 'Get projects of current user',
+  })
+  @ApiOkResponse({ type: ProjectsListResponseDto })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @UsePipes(ValidationPipe)
+  @Get('me/projects')
+  public async getMyProjects(
+    @Req() req: Request,
+    @Query() query: UserProjectsFilterDto,
+  ): Promise<ProjectsListResponseDto> {
+    const user: UserWithPasswordResponseDto =
+      req.user as UserWithPasswordResponseDto;
+    return this.usersService.getUserProjects(
+      user.id,
+      query.page,
+      query.limit,
+      query.status,
+    );
+  }
+
+  @User()
+  @ApiOperation({
+    summary: 'Get user projects',
+  })
+  @ApiOkResponse({ type: ProjectsListResponseDto })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @Get(':id/projects')
+  public async getUserProjects(
+    @Param('id', ParseUUIDv4Pipe) id: string,
+    @Query(ValidationPipe) query: UserProjectsFilterDto,
+  ): Promise<ProjectsListResponseDto> {
+    return this.usersService.getUserProjects(
+      id,
+      query.page,
+      query.limit,
+      query.status,
+    );
+  }
+
+  @User()
+  @ApiOperation({ summary: 'Get user by id' })
+  @ApiOkResponse({ type: UserResponseDto })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @Get(':id')
+  public async getUserById(
+    @Param('id', ParseUUIDv4Pipe) id: string,
+  ): Promise<UserResponseDto> {
+    return this.usersService.getUserById(id);
+  }
+
+  @User()
+  @ApiOperation({
+    summary: 'Get list of users with filters and pagination',
+  })
+  @ApiOkResponse({ type: UsersListResponseDto })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @UsePipes(ValidationPipe)
+  @Get('')
+  public async getUsers(
+    @Query() query: UsersFilterDto,
+  ): Promise<UsersListResponseDto> {
+    return this.usersService.getUsers(query);
+  }
+
+  @User()
+  @ApiOperation({
+    summary: 'Get current user invites',
+  })
+  @ApiOkResponse({ type: [ProjectParticipationResponseDto] })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @Get('me/invites')
+  public async getInvites(
+    @Req() req: Request,
+  ): Promise<ProjectParticipationResponseDto[]> {
+    const user: UserWithPasswordResponseDto =
+      req.user as UserWithPasswordResponseDto;
+    return this.usersService.getInvites(user.id);
+  }
+
+  @User()
+  @ApiOperation({
+    summary: 'Get current user requests',
+  })
+  @ApiOkResponse({ type: [ProjectParticipationResponseDto] })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @Get('me/requests')
+  public async getRequests(
+    @Req() req: Request,
+  ): Promise<ProjectParticipationResponseDto[]> {
+    const user: UserWithPasswordResponseDto =
+      req.user as UserWithPasswordResponseDto;
+    return this.usersService.getRequests(user.id);
+  }
 
   @ApiOperation({ summary: 'Delete password recovery token' })
   @ApiNoContentResponse()
@@ -317,20 +317,20 @@ export class UsersController {
     return this.usersService.cancelResetPassword(token);
   }
 
-  // @User()
-  // @ApiOperation({
-  //   summary: `Get requests by user id in current user's projects`,
-  // })
-  // @ApiOkResponse({ type: [ProjectParticipationResponseDto] })
-  // @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // @Get(':id/requests')
-  // public async getRequestsByUserId(
-  //   @Param('id', ParseUUIDv4Pipe) id: string,
-  //   @Req() req: Request,
-  // ): Promise<ProjectParticipationResponseDto[]> {
-  //   const owner: UserWithPasswordResponseDto =
-  //     req.user as UserWithPasswordResponseDto;
-  //   return this.usersService.getRequests(id, owner.id);
-  // }
+  @User()
+  @ApiOperation({
+    summary: `Get requests by user id in current user's projects`,
+  })
+  @ApiOkResponse({ type: [ProjectParticipationResponseDto] })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @Get(':id/requests')
+  public async getRequestsByUserId(
+    @Param('id', ParseUUIDv4Pipe) id: string,
+    @Req() req: Request,
+  ): Promise<ProjectParticipationResponseDto[]> {
+    const owner: UserWithPasswordResponseDto =
+      req.user as UserWithPasswordResponseDto;
+    return this.usersService.getRequests(id, owner.id);
+  }
 }

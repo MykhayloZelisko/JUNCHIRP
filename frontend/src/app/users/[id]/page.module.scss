@@ -1,0 +1,40 @@
+@use '@/assets/styles/variables';
+
+.user {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 40px;
+
+  &__details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 32px;
+  }
+
+  &_4 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 32px;
+  }
+
+  &_5 {
+    grid-column: span 2;
+    height: 100px;
+    background-color: variables.$gray-4;
+  }
+
+  &_6 {
+    grid-column: span 3;
+    height: 200px;
+    background-color: variables.$gray-4;
+  }
+
+  &__actions {
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+  }
+}

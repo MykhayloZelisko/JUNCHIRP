@@ -8,11 +8,16 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { RedisModule } from '../redis/redis.module';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { LoggerModule } from '../logger/logger.module';
+import { DiscordStrategy } from './strategies/discord.strategy';
+import { DiscordModule } from '../discord/discord.module';
 
 @Module({
   imports: [
     MailModule,
     UsersModule,
+    DiscordModule,
     RedisModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -23,9 +28,16 @@ import { RedisModule } from '../redis/redis.module';
         secret: configService.get('JWT_SECRET'),
       }),
     }),
+    LoggerModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    LocalStrategy,
+    GoogleStrategy,
+    DiscordStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

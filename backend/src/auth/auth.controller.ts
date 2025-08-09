@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Ip,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -19,6 +21,7 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
@@ -31,6 +34,8 @@ import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { Auth } from './decorators/auth.decorator';
 import { MessageResponseDto } from '../users/dto/message.response-dto';
+import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
+import { Discord } from './decorators/discord.decorator';
 import { UserResponseDto } from '../users/dto/user.response-dto';
 
 @ApiTags('Authorization')
@@ -117,5 +122,53 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<MessageResponseDto> {
     return this.authService.logout(ip, req, res);
+  }
+
+  @ApiOperation({ summary: 'Initiate Google OAuth2 login' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  @HttpCode(HttpStatus.FOUND)
+  @UseGuards(GoogleAuthGuard)
+  @Get('google')
+  // eslint-disable-next-line
+  public async googleAuth(): Promise<void> {}
+
+  @ApiOperation({ summary: 'Initiate Google OAuth2 login' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  @HttpCode(HttpStatus.FOUND)
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Callback endpoint for Google authentication' })
+  public async googleRedirect(
+    @Ip() ip: string,
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('state') state: string,
+    @Query('returnUrl') _returnUrl: string,
+  ): Promise<void> {
+    return this.authService.handleGoogleCallback(ip, req, res, state);
+  }
+
+  @Discord()
+  @ApiOperation({ summary: 'Initiate Discord OAuth2 login' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  @ApiForbiddenResponse({ description: 'Access denied: email not confirmed' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @HttpCode(HttpStatus.FOUND)
+  @Get('discord')
+  // eslint-disable-next-line
+  public async redirectToDiscord(): Promise<void> {}
+
+  @Discord()
+  @ApiOperation({ summary: 'Initiate Discord OAuth2 login' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  @HttpCode(HttpStatus.FOUND)
+  @Get('discord/callback')
+  public async handleDiscordCallback(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('state') state: string,
+    @Query('returnUrl') _returnUrl: string,
+  ): Promise<void> {
+    return this.authService.handleDiscordCallback(req, res, state);
   }
 }

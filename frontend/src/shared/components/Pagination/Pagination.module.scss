@@ -1,0 +1,39 @@
+@use '@/assets/styles/variables';
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  &__pages {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  &__button {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &__page {
+    border-radius: 20px;
+    padding: 0;
+    height: 40px;
+    width: 40px;
+    font-size: 16px;
+    font-weight: 500;
+
+    &--selected {
+      background-color: variables.$gray-5;
+    }
+  }
+
+  &__ellipsis {
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+    color: variables.$gray-4;
+  }
+}

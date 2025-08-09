@@ -11,10 +11,11 @@ export class CsrfService {
 
   public constructor(configService: ConfigService) {
     this.csrf = doubleCsrf({
-      getSecret: () => process.env.CSRF_SECRET ?? 'default_secret',
+      getSecret: () =>
+        configService.get<string>('CSRF_SECRET') ?? 'default_secret',
       getTokenFromRequest: (req) => req.headers['x-csrf-token'],
       cookieName:
-        process.env.NODE_ENV === 'production'
+        configService.get<string>('NODE_ENV') === 'production'
           ? '__Host-prod.x-csrf-token'
           : '_csrf',
       cookieOptions: {

@@ -1,0 +1,65 @@
+@use '@/assets/styles/variables';
+
+.user-item {
+  padding: 32px;
+  border-radius: 32px;
+  background-color: variables.$gray-1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 40px;
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  &__profile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  &__image {
+    align-self: flex-start;
+    border-radius: 70px;
+    box-shadow: 0 0 0 4px variables.$green-4;
+  }
+
+  &__edu-item {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  &__projects-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    color: variables.$green-1;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  &__projects-count {
+    font-size: 32px;
+    line-height: 0.9;
+    font-weight: 700;
+  }
+}

@@ -8,7 +8,7 @@ export const authApi = mainApi.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (userData) => ({
-        url: '/auth/register',
+        url: 'auth/register',
         method: 'POST',
         body: userData,
       }),
@@ -16,16 +16,32 @@ export const authApi = mainApi.injectEndpoints({
     }),
     getMe: builder.query({
       query: () => ({
-        url: '/users/me',
+        url: 'users/me',
       }),
       providesTags: (result) =>
         result
           ? [
               'auth',
               { type: 'soft-skills', id: 'LIST' },
+              ...result.softSkills.map((skill: SoftSkillInterface) => ({
+                type: 'soft-skills',
+                id: skill.id,
+              })),
               { type: 'hard-skills', id: 'LIST' },
+              ...result.hardSkills.map((skill: HardSkillInterface) => ({
+                type: 'hard-skills',
+                id: skill.id,
+              })),
               { type: 'educations', id: 'LIST' },
+              ...result.educations.map((edu: EducationInterface) => ({
+                type: 'educations',
+                id: edu.id,
+              })),
               { type: 'socials', id: 'LIST' },
+              ...result.socials.map((social: SocialInterface) => ({
+                type: 'socials',
+                id: social.id,
+              })),
             ]
           : [
               'auth',
@@ -37,7 +53,7 @@ export const authApi = mainApi.injectEndpoints({
     }),
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/auth/login',
+        url: 'auth/login',
         method: 'POST',
         body: credentials,
       }),
@@ -51,7 +67,7 @@ export const authApi = mainApi.injectEndpoints({
     }),
     logout: builder.mutation({
       query: () => ({
-        url: '/auth/logout',
+        url: 'auth/logout',
         method: 'POST',
       }),
       invalidatesTags: [
@@ -64,7 +80,7 @@ export const authApi = mainApi.injectEndpoints({
     }),
     sendConfirmationEmail: builder.mutation({
       query: (data) => ({
-        url: '/users/send-confirmation-email',
+        url: 'users/send-confirmation-email',
         method: 'POST',
         body: data,
       }),
@@ -72,7 +88,7 @@ export const authApi = mainApi.injectEndpoints({
     }),
     confirmEmail: builder.mutation({
       query: (data) => ({
-        url: '/users/confirm',
+        url: 'users/confirm',
         method: 'POST',
         body: data,
       }),
@@ -80,7 +96,7 @@ export const authApi = mainApi.injectEndpoints({
     }),
     requestPasswordReset: builder.mutation({
       query: (data) => ({
-        url: '/users/request-password-reset',
+        url: 'users/request-password-reset',
         method: 'POST',
         body: data,
       }),
@@ -88,7 +104,7 @@ export const authApi = mainApi.injectEndpoints({
     }),
     updateUser: builder.mutation({
       query: (data) => ({
-        url: '/users/me',
+        url: 'users/me',
         method: 'PATCH',
         body: data,
       }),
@@ -96,19 +112,19 @@ export const authApi = mainApi.injectEndpoints({
     }),
     validateToken: builder.query({
       query: (token) => ({
-        url: `/users/validate-password-token?token=${encodeURIComponent(token)}`,
+        url: `users/validate-password-token?token=${encodeURIComponent(token)}`,
       }),
     }),
     resetPassword: builder.mutation({
       query: (data) => ({
-        url: '/users/reset-password',
+        url: 'users/reset-password',
         method: 'POST',
         body: data,
       }),
     }),
     cancelResetPassword: builder.mutation({
       query: (token) => ({
-        url: `/users/password-token?token=${encodeURIComponent(token)}`,
+        url: `users/password-token?token=${encodeURIComponent(token)}`,
         method: 'DELETE',
       }),
     }),

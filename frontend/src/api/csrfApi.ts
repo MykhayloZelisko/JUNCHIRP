@@ -9,7 +9,7 @@ export const csrfApi = createApi({
   endpoints: (build) => ({
     getCsrfToken: build.query<string, void>({
       query: () => ({
-        url: '/csrf',
+        url: 'csrf',
       }),
       transformResponse: (response: { csrfToken: string }) =>
         response.csrfToken,

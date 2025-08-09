@@ -6,9 +6,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailModule } from '../mail/mail.module';
 import { RolesModule } from '../roles/roles.module';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
-// import { ProjectsModule } from '../projects/projects.module';
-// import { ParticipationsModule } from '../participations/participations.module';
-// import { LoggerModule } from '../logger/logger.module';
+import { ProjectsModule } from '../projects/projects.module';
+import { ParticipationsModule } from '../participations/participations.module';
+import { LoggerModule } from '../logger/logger.module';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -25,9 +25,9 @@ import { AuthModule } from '../auth/auth.module';
     MailModule,
     RolesModule,
     CloudinaryModule,
-    // ProjectsModule,
-    // ParticipationsModule,
-    // LoggerModule,
+    ProjectsModule,
+    ParticipationsModule,
+    LoggerModule,
     forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],
