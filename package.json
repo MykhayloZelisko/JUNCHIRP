@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "workspaces": ["frontend", "backend"],
   "scripts": {
-    "build:backend": "nest build",
+    "build:backend": "npm run build --workspace backend",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:backend": "npm run start --workspace backend",
     "start:dev": "nest start --watch",
@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "dev": "next dev --turbopack",
-    "build:frontend": "next build",
+    "build:frontend": "npm run build --workspace frontend",
+    "build": "npm run build:frontend && npm run build:backend",
     "start:frontend": "next start",
     "lint:frontend": "next lint",
     "neon:reset": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma migrate reset --schema backend/prisma/schema.prisma",
