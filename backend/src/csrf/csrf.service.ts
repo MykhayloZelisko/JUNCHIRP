@@ -22,7 +22,7 @@ export class CsrfService {
         httpOnly: true,
         sameSite: 'lax',
         maxAge: configService.get<number>('EXPIRE_TIME_CSRF_TOKEN'),
-        domain: '.onrender.com',
+        domain: configService.get<string>('DOMAIN'),
       },
     });
   }
