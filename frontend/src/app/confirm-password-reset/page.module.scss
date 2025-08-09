@@ -1,0 +1,13 @@
+@use '@/assets/styles/variables';
+
+.confirm-password-reset {
+  padding: 40px;
+
+  &__inner {
+    border-radius: 32px;
+    padding: 80px 40px;
+    background-color: variables.$gray-1;
+    display: flex;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,14 @@
+.hard-skill-form  {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 40px;
+
+  &__fieldset {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    gap: 20px;
+  }
+}

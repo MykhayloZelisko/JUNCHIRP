@@ -1,0 +1,60 @@
+@use '@/assets/styles/variables';
+
+.textarea {
+  &__label {
+    display: block;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: variables.$gray-10;
+  }
+
+  &__textarea {
+    background-color: variables.$white-2;
+    width: 100%;
+    border: 1px solid variables.$gray-8;
+    outline: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.4;
+    height: 141px;
+    box-sizing: border-box;
+    resize: vertical;
+
+    &:focus {
+      border-color: variables.$green-6;
+      box-shadow: 0 0 0 4px variables.$green-4;
+    }
+
+    &::placeholder {
+      color: variables.$gray-4;
+    }
+
+    &--invalid {
+      padding-right: 42px;
+      border: 1px solid variables.$red-8;
+
+      &:focus {
+        border-color: variables.$red-8;
+        box-shadow: 0 0 0 4px variables.$red-3;
+      }
+    }
+  }
+
+  &__error {
+    height: 17px;
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.2;
+    color: variables.$red-2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+}

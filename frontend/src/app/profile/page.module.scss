@@ -1,0 +1,21 @@
+.profile {
+  padding: 40px 40px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  align-items: stretch;
+
+  &__details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 40px 32px;
+  }
+
+  &__actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, auto);
+    gap: 40px 32px;
+  }
+}

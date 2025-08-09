@@ -1,0 +1,36 @@
+@use '@/assets/styles/variables';
+@use '@/assets/styles/mixins';
+@use 'sass:map';
+
+.social-button {
+  font-weight: 600;
+  font-size: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border-radius: 8px;
+  height: 44px;
+  gap: 12px;
+  white-space: nowrap;
+
+  &--full {
+    width: 100%;
+  }
+
+  &--icon-button {
+    padding: 0;
+    height: 44px;
+    width: 44px;
+  }
+
+  @each $social in variables.$socials {
+    @if map.has-key(variables.$social-button-colors, $social) {
+      &--#{$social} {
+        @include mixins.social-button-styles($social);
+      }
+    }
+  }
+}

@@ -1,0 +1,310 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String                 @id @default(dbgenerated("gen_random_uuid()"))
+  googleId              String?                @map("google_id")
+  discordId             String?                @map("discord_id")
+  email                 String                 @unique
+  avatarUrl             String                 @map("avatar_url")
+  password              String                 @default("")
+  createdAt             DateTime               @default(now()) @map("created_at")
+  isVerified            Boolean                @default(false) @map("is_verified")
+  firstName             String                 @map("first_name")
+  lastName              String                 @map("last_name")
+  roleId                String                 @map("role_id")
+  activeProjectsCount   Int                    @default(0) @map("active_projects_count")
+  educations            Education[]
+  loginAttempt          LoginAttempt?
+  ownProjects           Project[]
+  socials               Social[]
+  tasks                 Task[]
+  role                  Role                   @relation(fields: [roleId], references: [id])
+  verificationAttempts  VerificationAttempt[]
+  verificationToken     VerificationToken?
+  projectRoles          ProjectRole[]
+  resetPasswordToken    ResetPasswordToken?
+  resetPasswordAttempts ResetPasswordAttempt[]
+  hardSkills            UserHardSkill[]
+  softSkills            UserSoftSkill[]
+  participationInvites  ParticipationInvite[]
+  participationRequests ParticipationRequest[]
+
+  @@index([activeProjectsCount])
+  @@map("users")
+}
+
+model Role {
+  id       String @id @default(dbgenerated("gen_random_uuid()"))
+  roleName String @unique @map("role_name")
+  users    User[]
+
+  @@map("roles")
+}
+
+model VerificationToken {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String?  @unique @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("verification_tokens")
+}
+
+model VerificationAttempt {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("verification_attempts")
+}
+
+model ResetPasswordToken {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String   @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reset_password_tokens")
+}
+
+model ResetPasswordAttempt {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reset_password_attempts")
+}
+
+model Project {
+  id                  String          @id @default(dbgenerated("gen_random_uuid()"))
+  projectName         String          @map("project_name")
+  description         String
+  status              ProjectStatus   @default(active)
+  createdAt           DateTime        @default(now()) @map("created_at")
+  logoUrl             String?         @map("logo_url")
+  participantsCount   Int             @default(1) @map("participiants_count")
+  ownerId             String          @map("owner_id")
+  categoryId          String          @map("category_id")
+  discordChannelId    String          @map("discord_channel_id")
+  discordAdminRoleId  String          @map("discord_admin_role_id")
+  discordMemberRoleId String          @map("discord_member_role_id")
+  discordUrl          String          @default("https://discord.gg/x2rdtS2Vbz") @map("discord_url")
+  boards              Board[]
+  documents           Document[]
+  roles               ProjectRole[]
+  category            ProjectCategory @relation(fields: [categoryId], references: [id])
+  owner               User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([status, participantsCount])
+  @@index([status, categoryId])
+  @@index([participantsCount, categoryId])
+  @@index([categoryId, status, participantsCount])
+  @@index([status])
+  @@index([categoryId])
+  @@index([participantsCount])
+  @@map("projects")
+}
+
+model Document {
+  id           String  @id @default(dbgenerated("gen_random_uuid()"))
+  documentName String  @map("document_name")
+  url          String
+  projectId    String  @map("project_id")
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([url, projectId])
+  @@map("documents")
+}
+
+model ProjectRole {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()"))
+  projectId            String                 @map("project_id")
+  roleTypeId           String                 @map("role_type_id")
+  project              Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  roleType             ProjectRoleType        @relation(fields: [roleTypeId], references: [id], onDelete: Cascade)
+  userId               String?                @map("user_id")
+  user                 User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  participationInvite  ParticipationInvite[]
+  participationRequest ParticipationRequest[]
+
+  @@unique([userId, projectId])
+  @@map("project_roles")
+}
+
+model ProjectRoleType {
+  id         String        @id @default(dbgenerated("gen_random_uuid()"))
+  roleName   String        @unique @map("role_name")
+  roles      ProjectRole[]
+  educations Education[]
+
+  @@map("project_role_types")
+}
+
+model ProjectCategory {
+  id           String    @id @default(dbgenerated("gen_random_uuid()"))
+  categoryName String    @unique @map("category_name")
+  projects     Project[]
+
+  @@map("project_categories")
+}
+
+model Board {
+  id        String       @id @default(dbgenerated("gen_random_uuid()"))
+  boardName String       @map("board_name")
+  projectId String       @map("project_id")
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  columns   TaskStatus[]
+
+  @@unique([boardName, projectId])
+  @@map("boards")
+}
+
+model TaskStatus {
+  id          String @id @default(dbgenerated("gen_random_uuid()"))
+  statusName  String @map("status_name")
+  columnIndex Int    @map("column_index")
+  boardId     String @map("board_id")
+  board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@unique([statusName, boardId])
+  @@map("task_statuses")
+}
+
+model Task {
+  id           String       @id @default(dbgenerated("gen_random_uuid()"))
+  taskName     String       @map("task_name")
+  description  String
+  priority     TaskPriority
+  deadline     DateTime
+  taskStatusId String       @map("task_status_id")
+  assigneeId   String?      @map("assignee_id")
+  taskStatus   TaskStatus   @relation(fields: [taskStatusId], references: [id], onDelete: Cascade)
+  assignee     User?        @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  @@map("tasks")
+}
+
+model SupportRequest {
+  id      String @id @default(dbgenerated("gen_random_uuid()"))
+  email   String
+  request String
+
+  @@map("support_requests")
+}
+
+model LogEvent {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  details   String
+  ip        String
+  email     String
+  eventType String   @map("event_type")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("log_events")
+}
+
+model Education {
+  id               String          @id @default(dbgenerated("gen_random_uuid()"))
+  userId           String          @map("user_id")
+  specializationId String          @map("specialization_id")
+  institution      String
+  specialization   ProjectRoleType @relation(fields: [specializationId], references: [id], onDelete: Cascade)
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, institution, specializationId])
+  @@map("educations")
+}
+
+model Social {
+  id      String @id @default(dbgenerated("gen_random_uuid()"))
+  userId  String @map("user_id")
+  url     String
+  network String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, network])
+  @@map("socials")
+}
+
+model LoginAttempt {
+  id            String    @id @default(dbgenerated("gen_random_uuid()"))
+  attemptsCount Int       @map("attempts_count")
+  blockedUntil  DateTime? @map("blocked_until")
+  userId        String    @unique @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("login_attempts")
+}
+
+model UserHardSkill {
+  id            String @id @default(dbgenerated("gen_random_uuid()"))
+  hardSkillName String @map("skill_name")
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String @map("user_id")
+
+  @@unique([userId, hardSkillName])
+  @@map("user_hard_skills")
+}
+
+model UserSoftSkill {
+  id            String @id @default(dbgenerated("gen_random_uuid()"))
+  softSkillName String @map("skill_name")
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String @map("user_id")
+
+  @@unique([userId, softSkillName])
+  @@map("user_soft_skills")
+}
+
+model Institution {
+  id              String @id @default(dbgenerated("gen_random_uuid()"))
+  institutionName String @map("institution_name")
+
+  @@map("institutions")
+}
+
+model ParticipationInvite {
+  id            String      @id @default(dbgenerated("gen_random_uuid()"))
+  userId        String      @map("user_id")
+  projectRoleId String      @map("project_role_id")
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectRole   ProjectRole @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectRoleId])
+  @@map("participation_invites")
+}
+
+model ParticipationRequest {
+  id            String      @id @default(dbgenerated("gen_random_uuid()"))
+  userId        String      @map("user_id")
+  projectRoleId String      @map("project_role_id")
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectRole   ProjectRole @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectRoleId])
+  @@map("participation_requests")
+}
+
+enum ProjectStatus {
+  active
+  done
+}
+
+enum TaskPriority {
+  high
+  normal
+  low
+}

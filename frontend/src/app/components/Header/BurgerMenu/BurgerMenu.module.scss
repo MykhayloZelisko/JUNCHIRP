@@ -1,0 +1,70 @@
+@use '@/assets/styles/variables';
+
+.burger-menu {
+  position: relative;
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    color: variables.$black-2;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: variables.$gray-5;
+      color: variables.$black-2;
+    }
+
+    &:active {
+      background-color: variables.$white-2;
+      color: variables.$green-2;
+      box-shadow: 0 0 0 6px variables.$purple-1;
+    }
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    color: inherit;
+  }
+
+  &__menu {
+    position: absolute;
+    top: 92px;
+    right: -40px;
+    width: 336px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-radius: 8px;
+    border-bottom: 2px solid variables.$green-2;
+    background-color: variables.$white-2;
+  }
+
+  &__menu-item {
+    padding: 12px;
+    gap: 16px;
+    border-radius: 8px;
+    font-family: variables.$inter;
+    font-weight: 600;
+    line-height: 1.4;
+    font-size: 16px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: variables.$black-2;
+    border: none;
+    background-color: variables.$white-2;
+
+    &:hover {
+      background-color: #fafafa;
+    }
+  }
+}

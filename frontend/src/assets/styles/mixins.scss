@@ -1,0 +1,122 @@
+@use 'variables';
+@use 'sass:map';
+
+// button mixins
+@mixin button-styles($variant, $color) {
+  $color-data: map.get(map.get(variables.$button-colors, $variant), $color);
+
+  $base: map.get($color-data, base);
+  background-color: map.get($base, bg);
+  color: map.get($base, text);
+  border: 2px solid map.get($base, border);
+
+  @if $variant == link {
+    border: none;
+    background: none;
+    text-decoration: underline;
+  }
+
+  $hover: map.get($color-data, hover);
+  &:hover:not(:disabled) {
+    background-color: map.get($hover, bg);
+    color: map.get($hover, text);
+    border-color: map.get($hover, border);
+
+    @if $variant == link {
+      border: none;
+      background: none;
+      text-decoration: underline;
+    }
+  }
+
+  $active: map.get($color-data, active);
+  &:active:not(:disabled) {
+    background-color: map.get($active, bg);
+    color: map.get($active, text);
+    outline: none;
+    border-color: map.get($active, border);
+
+    @if $variant == link {
+      border: none;
+      background: none;
+      text-decoration: underline;
+    }
+
+    @if map.has-key($active, shadow) {
+      box-shadow: 0 0 0 4px map.get($active, shadow);
+    }
+  }
+
+  $disabled: map.get($color-data, disabled);
+  &:disabled {
+    background-color: map.get($disabled, bg);
+    color: map.get($disabled, text);
+    cursor: default;
+    border-color: map.get($disabled, border);
+
+    @if $variant == link {
+      border: none;
+      background: none;
+      text-decoration: underline;
+    }
+  }
+}
+
+@mixin button-size($size, $variant) {
+  $size-data: map.get(variables.$button-sizes, $size);
+
+  @if $variant == 'link' {
+    font-size: map.get(variables.$button-sizes, $size, font-size);
+    padding: 0;
+    height: map.get($size-data, link-height);
+    border-radius: 0;
+    gap: 0;
+  } @else {
+    padding: 0 map.get($size-data, padding);
+    font-size: map.get($size-data, font-size);
+    height: map.get($size-data, height);
+    border-radius: map.get($size-data, radius);
+    gap: map.get($size-data, gap);
+  }
+}
+
+@mixin icon-button-size($size, $variant) {
+  $size-data: map.get(variables.$button-sizes, $size);
+
+  @if $variant == 'link' {
+    padding: 0;
+    height: map.get($size-data, icon-height);
+    width: map.get($size-data, icon-height);
+    border-radius: 0;
+  } @else {
+    padding: 0;
+    height: map.get($size-data, height);
+    width: map.get($size-data, height);
+    border-radius: map.get($size-data, radius);
+  }
+}
+
+@mixin social-button-styles($social) {
+  $color-data: map.get(variables.$social-button-colors, $social);
+
+  $base: map.get($color-data, base);
+  background-color: map.get($base, bg);
+  color: map.get($base, text);
+  border: 1px solid map.get($base, border);
+
+  $hover: map.get($color-data, hover);
+  &:hover {
+    background-color: map.get($hover, bg);
+    color: map.get($hover, text);
+    border-color: map.get($hover, border);
+  }
+
+  $active: map.get($color-data, active);
+  &:active {
+    background-color: map.get($active, bg);
+    color: map.get($active, text);
+    outline: none;
+    border-color: map.get($active, border);
+    box-shadow: 0 0 0 4px map.get($active, shadow);
+  }
+}

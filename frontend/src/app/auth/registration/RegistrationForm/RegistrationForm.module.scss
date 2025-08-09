@@ -1,0 +1,58 @@
+@use '@/assets/styles/variables';
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__checkbox-wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__checkbox-error {
+    height: 34px;
+    font-size: 14px;
+    line-height: 1.2;
+    color: variables.$red-2;
+  }
+
+  &__checkbox-label {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  &__link {
+    color: variables.$blue-1;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  &__checkbox {
+    display: none;
+  }
+
+  &__icon {
+    border-radius: 4px;
+    height: 16px;
+    width: 16px;
+    color: variables.$gray-8;
+
+    &:hover {
+      color: variables.$green-2;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 4px variables.$green-4;
+      color: variables.$green-2;
+    }
+  }
+}

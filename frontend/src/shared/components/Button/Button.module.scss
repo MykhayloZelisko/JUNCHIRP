@@ -1,0 +1,44 @@
+@use '@/assets/styles/variables';
+@use '@/assets/styles/mixins';
+@use 'sass:map';
+
+.button {
+  font-weight: 600;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+
+  &--full {
+    width: 100%;
+  }
+
+  @each $variant in variables.$variants {
+    @each $color in variables.$colors {
+      @if map.has-key(variables.$button-colors, $variant) and
+        map.has-key(map.get(variables.$button-colors, $variant), $color)
+      {
+        &--#{$variant}-#{$color} {
+          @include mixins.button-styles($variant, $color);
+        }
+      }
+    }
+
+    @each $size in variables.$sizes {
+      &--#{$variant}-#{$size} {
+        @include mixins.button-size($size, $variant);
+      }
+
+      &--icon-button-#{$variant}-#{$size} {
+        @include mixins.icon-button-size($size, $variant);
+      }
+    }
+  }
+
+  &__icon {
+    color: inherit;
+    flex-shrink: 0;
+  }
+}

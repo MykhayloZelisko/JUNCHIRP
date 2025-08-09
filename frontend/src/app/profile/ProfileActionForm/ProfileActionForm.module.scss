@@ -1,0 +1,15 @@
+@use '@/assets/styles/variables';
+
+.profile-action-form {
+  display: flex;
+  align-items: center;
+  background-color: variables.$gray-1;
+  border-radius: 32px;
+  padding: 40px;
+
+  &__text {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.4;
+  }
+}

@@ -22,7 +22,15 @@
     "dev": "next dev --turbopack",
     "build:frontend": "next build",
     "start:frontend": "next start",
-    "lint:frontend": "next lint"
+    "lint:frontend": "next lint",
+    "neon:reset": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma migrate reset --schema backend/prisma/schema.prisma",
+    "neon:reset:force": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma migrate reset --force --schema backend/prisma/schema.prisma",
+    "neon:generate": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma generate --schema backend/prisma/schema.prisma",
+    "neon:migrate:create": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma migrate dev --create-only --name --schema backend/prisma/schema.prisma",
+    "neon:migrate:dev": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma migrate dev --name --schema backend/prisma/schema.prisma",
+    "neon:migrate:deploy": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma migrate deploy --schema backend/prisma/schema.prisma",
+    "neon:db:push": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma db push --schema backend/prisma/schema.prisma",
+    "neon:db:pull": "cross-env DATABASE_URL=\"postgresql://neondb_owner:npg_Tdopnfh4C5aV@ep-aged-band-a91361as-pooler.gwc.azure.neon.tech/neondb?sslmode=require&channel_binding=require\" npx prisma db pull --schema backend/prisma/schema.prisma"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -47,7 +55,7 @@
     "cloudinary": "^2.6.0",
     "cookie-parser": "^1.4.7",
     "cross-env": "^10.0.0",
-    "csrf-csrf": "^4.0.3",
+    "csrf-csrf": "^3.1.0",
     "discord.js": "^14.19.3",
     "dotenv": "^17.2.1",
     "handlebars": "^4.7.8",

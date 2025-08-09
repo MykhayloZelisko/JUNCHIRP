@@ -1,0 +1,19 @@
+@use '@/assets/styles/variables';
+
+.bird-background {
+  padding: 40px;
+
+  &__inner {
+    border-radius: 32px;
+    padding: 0 40px;
+    background-color: variables.$gray-1;
+    display: flex;
+    justify-content: space-between;
+    min-height: 286px;
+  }
+
+  &__bird {
+    display: flex;
+    align-items: center;
+  }
+}

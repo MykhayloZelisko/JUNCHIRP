@@ -1,0 +1,405 @@
+// fonts
+$inter: 'Inter', sans-serif;
+$montserrat: 'Montserrat', sans-serif;
+
+// colors
+$green-1: #1a631a;
+$green-2: #1c851c;
+$green-3: #cae3ca;
+$green-4: #dcf6dc;
+$green-5: #a4dca4;
+$green-6: #65b365;
+$white-1: #ffffff99;
+$white-2: #fefefe;
+$gray-1: #f1f1f1;
+$gray-2: #f8f8f8;
+$gray-3: #b8b8b8;
+$gray-4: #727272;
+$gray-5: #fafafa;
+$gray-6: #4f4f4f;
+$gray-7: #898989;
+$gray-8: #d0d0d0;
+$gray-9: #f5f5f5;
+$gray-10: #434343;
+$black-1: #000000;
+$black-2: #141416;
+$red-1: #b31d1d;
+$red-2: #db1f1f;
+$red-3: #fee4e2;
+$red-4: #ffbcbc;
+$red-5: #ffe2e2;
+$red-6: #fff0f0;
+$red-7: #fff5f5;
+$red-8: #ffa4a4;
+$purple-1: #f4ebff;
+$blue-1: #295bff;
+$blue-2: #2754e7;
+$yellow-1: #fddb00;
+
+// button variables
+$variants: primary, secondary, secondary-frame, secondary-footer, tertiary, link;
+$colors: 'green', 'red', 'gray', 'black', 'blue';
+$sizes: sm, md, lg, lg-md, ssm;
+$button-colors: (
+  primary: (
+    'green': (
+      base: (
+        bg: $green-1,
+        text: $white-2,
+        border: $green-1,
+      ),
+      hover: (
+        bg: $green-2,
+        text: $white-2,
+        border: $green-2,
+      ),
+      active: (
+        bg: $green-2,
+        text: $white-2,
+        shadow: $green-4,
+        border: $green-2,
+      ),
+      disabled: (
+        bg: $green-3,
+        text: $white-2,
+        border: $green-3,
+      ),
+    ),
+    'red': (
+      base: (
+        bg: $red-1,
+        text: $white-2,
+        border: $red-1,
+      ),
+      hover: (
+        bg: $red-2,
+        text: $white-2,
+        border: $red-2,
+      ),
+      active: (
+        bg: $red-2,
+        text: $white-2,
+        shadow: $red-3,
+        border: $red-2,
+      ),
+      disabled: (
+        bg: $red-4,
+        text: $white-2,
+        border: $red-4,
+      ),
+    ),
+  ),
+  secondary-frame: (
+    'green': (
+      base: (
+        bg: $white-2,
+        text: $black-2,
+        border: $green-1,
+      ),
+      hover: (
+        bg: $gray-5,
+        text: $black-2,
+        border: $green-2,
+      ),
+      active: (
+        bg: $gray-5,
+        text: $black-2,
+        shadow: $green-4,
+        border: $green-2,
+      ),
+      disabled: (
+        bg: $white-2,
+        text: $gray-3,
+        border: $gray-3,
+      ),
+    ),
+    'red': (
+      base: (
+        bg: $white-2,
+        text: $red-1,
+        border: $red-1,
+      ),
+      hover: (
+        bg: $red-7,
+        text: $red-1,
+        border: $red-1,
+      ),
+      active: (
+        bg: $red-7,
+        text: $red-1,
+        shadow: $red-3,
+        border: $red-1,
+      ),
+      disabled: (
+        bg: $white-2,
+        text: $red-8,
+        border: $red-8,
+      ),
+    ),
+  ),
+  secondary: (
+    'green': (
+      base: (
+        bg: $gray-1,
+        text: $green-1,
+        border: $gray-1,
+      ),
+      hover: (
+        bg: $gray-2,
+        text: $green-2,
+        border: $gray-2,
+      ),
+      active: (
+        bg: $gray-2,
+        text: $white-2,
+        shadow: $green-4,
+        border: $gray-2,
+      ),
+      disabled: (
+        bg: $green-3,
+        text: $white-2,
+        border: $green-3,
+      ),
+    ),
+    'red': (
+      base: (
+        bg: $red-5,
+        text: $red-1,
+        border: $red-5,
+      ),
+      hover: (
+        bg: $red-6,
+        text: $red-1,
+        border: $red-6,
+      ),
+      active: (
+        bg: $red-6,
+        text: $red-1,
+        shadow: $red-3,
+        border: $red-6,
+      ),
+      disabled: (
+        bg: $red-7,
+        text: $red-8,
+        border: $red-6,
+      ),
+    ),
+  ),
+  secondary-footer: (
+    'green': (
+      base: (
+        bg: $black-2,
+        text: $white-2,
+        border: $green-1,
+      ),
+      hover: (
+        bg: $black-2,
+        text: $white-2,
+        border: $green-2,
+      ),
+      active: (
+        bg: $black-2,
+        text: $white-2,
+        shadow: $green-4,
+        border: $green-2,
+      ),
+      disabled: (
+        bg: $black-2,
+        text: $white-2,
+        border: $gray-3,
+      ),
+    ),
+  ),
+  tertiary: (
+    'green': (
+      base: (
+        bg: transparent,
+        text: $green-1,
+        border: transparent,
+      ),
+      hover: (
+        bg: $gray-5,
+        text: $green-2,
+        border: $gray-5,
+      ),
+      active: (
+        bg: transparent,
+        text: $green-2,
+        border: transparent,
+      ),
+      disabled: (
+        bg: transparent,
+        text: $gray-3,
+        border: transparent,
+      ),
+    ),
+    'gray': (
+      base: (
+        bg: transparent,
+        text: $gray-4,
+        border: transparent,
+      ),
+      hover: (
+        bg: $gray-5,
+        text: $gray-6,
+        border: $gray-5,
+      ),
+      active: (
+        bg: transparent,
+        text: $gray-4,
+        border: transparent,
+      ),
+      disabled: (
+        bg: transparent,
+        text: $gray-3,
+        border: transparent,
+      ),
+    ),
+  ),
+  link: (
+    'blue': (
+      base: (
+        text: $blue-1,
+      ),
+      hover: (
+        text: $blue-2,
+      ),
+      active: (
+        text: $blue-1,
+      ),
+      disabled: (
+        text: $gray-3,
+      ),
+    ),
+    'green': (
+      base: (
+        text: $green-1,
+      ),
+      hover: (
+        text: $green-2,
+      ),
+      active: (
+        text: $green-6,
+      ),
+      disabled: (
+        text: $gray-3,
+      ),
+    ),
+    'black': (
+      base: (
+        text: $black-2,
+      ),
+      hover: (
+        text: $gray-6,
+      ),
+      active: (
+        text: $gray-4,
+      ),
+      disabled: (
+        text: $gray-3,
+      ),
+    ),
+    'gray': (
+      base: (
+        text: $gray-4,
+      ),
+      hover: (
+        text: $gray-6,
+      ),
+      active: (
+        text: $gray-4,
+      ),
+      disabled: (
+        text: $gray-3,
+      ),
+    ),
+  ),
+);
+$button-sizes: (
+  ssm: (
+    padding: 0,
+    font-size: 16px,
+    height: 16px,
+    link-height: 16px,
+    icon-height: 16px,
+    radius: 2px,
+    gap: 2px,
+  ),
+  sm: (
+    padding: 22px,
+    font-size: 20px,
+    height: 44px,
+    link-height: 28px,
+    icon-height: 20px,
+    radius: 8px,
+    gap: 8px,
+  ),
+  md: (
+    padding: 22px,
+    font-size: 20px,
+    height: 48px,
+    link-height: 39px,
+    icon-height: 24px,
+    radius: 8px,
+    gap: 8px,
+  ),
+  lg: (
+    padding: 32px,
+    font-size: 28px,
+    height: 104px,
+    link-height: 38px,
+    icon-height: 32px,
+    radius: 24px,
+    gap: 32px,
+  ),
+  lg-md: (
+    padding: 32px,
+    font-size: 28px,
+    height: 80px,
+    link-height: 38px,
+    icon-height: 32px,
+    radius: 24px,
+    gap: 32px,
+  ),
+);
+
+// social button variables
+$socials: google, facebook;
+$social-button-colors: (
+  google: (
+    base: (
+      bg: $white-2,
+      text: $gray-4,
+      border: $gray-8,
+    ),
+    hover: (
+      bg: $gray-5,
+      text: $gray-4,
+      border: $gray-8,
+    ),
+    active: (
+      bg: $white-2,
+      text: $gray-4,
+      shadow: $gray-9,
+      border: $gray-8,
+    ),
+  ),
+  facebook: (
+    base: (
+      bg: $blue-1,
+      text: $white-2,
+      border: $blue-1,
+    ),
+    hover: (
+      bg: $blue-2,
+      text: $white-2,
+      border: $blue-2,
+    ),
+    active: (
+      bg: $blue-1,
+      text: $white-2,
+      shadow: $gray-9,
+      border: $blue-1,
+    ),
+  ),
+);

@@ -1,0 +1,28 @@
+@use '@/assets/styles/variables';
+
+.new-password {
+  padding: 40px;
+  min-height: calc(100vh - 380px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__inner {
+    max-width: 584px;
+    width: 100%;
+    background-color: variables.$gray-1;
+    border-radius: 32px;
+    padding: 80px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+  }
+
+  &__title {
+    text-align: center;
+    font-weight: 600;
+    line-height: 1.2;
+    font-size: 32px;
+  }
+}
