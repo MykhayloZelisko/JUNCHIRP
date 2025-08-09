@@ -20,7 +20,7 @@ export class CsrfService {
       cookieOptions: {
         secure: true,
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: 'lax',
         maxAge: configService.get<number>('EXPIRE_TIME_CSRF_TOKEN'),
         domain: '.onrender.com',
       },
