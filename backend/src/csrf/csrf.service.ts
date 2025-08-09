@@ -22,8 +22,7 @@ export class CsrfService {
         httpOnly: true,
         sameSite: 'lax',
         maxAge: Number(process.env.EXPIRE_TIME_CSRF_TOKEN),
-        domain:
-          process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
+        domain: '.onrender.com',
       },
     });
   }
