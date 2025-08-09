@@ -223,7 +223,6 @@ export class AuthService {
       expires: expiresIn,
       secure: true,
       sameSite: 'lax',
-      domain: this.configService.get<string>('DOMAIN'),
     });
   }
 
@@ -236,7 +235,6 @@ export class AuthService {
       expires: expiresIn,
       secure: true,
       sameSite: 'lax',
-      domain: this.configService.get<string>('DOMAIN'),
     });
   }
 
@@ -296,13 +294,11 @@ export class AuthService {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
-        domain: this.configService.get<string>('DOMAIN'),
       });
       res.clearCookie('accessToken', {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
-        domain: this.configService.get<string>('DOMAIN'),
       });
     } catch {
       return;
