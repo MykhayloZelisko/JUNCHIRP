@@ -9,24 +9,21 @@ import { CsrfTokenResponseDto } from './dto/csrf-token.response-dto';
 export class CsrfService {
   private readonly csrf: DoubleCsrfUtilities;
 
-  public constructor(configService: ConfigService) {
+  public constructor() {
     this.csrf = doubleCsrf({
-      getSecret: () =>
-        configService.get<string>('CSRF_SECRET') ?? 'default_secret',
+      getSecret: () => process.env.CSRF_SECRET ?? 'default_secret',
       getTokenFromRequest: (req) => req.headers['x-csrf-token'],
       cookieName:
-        configService.get<string>('NODE_ENV') === 'production'
+        process.env.NODE_ENV === 'production'
           ? '__Host-prod.x-csrf-token'
           : '_csrf',
       cookieOptions: {
         secure: true,
         httpOnly: true,
         sameSite: 'lax',
-        maxAge: configService.get<number>('EXPIRE_TIME_CSRF_TOKEN'),
+        maxAge: Number(process.env.EXPIRE_TIME_CSRF_TOKEN),
         domain:
-          configService.get<string>('NODE_ENV') === 'production'
-            ? '.onrender.com'
-            : undefined,
+          process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
       },
     });
   }
