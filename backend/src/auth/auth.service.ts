@@ -223,10 +223,6 @@ export class AuthService {
       expires: expiresIn,
       secure: true,
       sameSite: 'lax',
-      domain:
-        this.configService.get<string>('NODE_ENV') === 'production'
-          ? '.onrender.com'
-          : undefined,
     });
   }
 
@@ -239,10 +235,6 @@ export class AuthService {
       expires: expiresIn,
       secure: true,
       sameSite: 'lax',
-      domain:
-        this.configService.get<string>('NODE_ENV') === 'production'
-          ? '.onrender.com'
-          : undefined,
     });
   }
 
@@ -302,19 +294,11 @@ export class AuthService {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
-        domain:
-          this.configService.get<string>('NODE_ENV') === 'production'
-            ? '.onrender.com'
-            : undefined,
       });
       res.clearCookie('accessToken', {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
-        domain:
-          this.configService.get<string>('NODE_ENV') === 'production'
-            ? '.onrender.com'
-            : undefined,
       });
     } catch {
       return;
