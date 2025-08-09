@@ -25,6 +25,13 @@ export class CsrfService {
         domain: configService.get<string>('DOMAIN'),
       },
     });
+    const rawDomain = configService.get<string>('DOMAIN');
+    console.log(
+      'DOMAIN raw:',
+      JSON.stringify(rawDomain),
+      'length:',
+      rawDomain?.length,
+    );
   }
 
   public doubleCsrfProtection(
