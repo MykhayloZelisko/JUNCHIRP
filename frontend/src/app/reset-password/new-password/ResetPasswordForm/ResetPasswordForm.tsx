@@ -5,7 +5,7 @@ import styles from './ResetPasswordForm.module.scss';
 import Button from '@/shared/components/Button/Button';
 import Input from '@/shared/components/Input/Input';
 import PasswordStrengthIndicator from '@/shared/components/PasswordStrengthIndicator/PasswordStrengthIndicator';
-import { z, ZodEffects, ZodObject, ZodString } from 'zod';
+import { z, ZodObject, ZodString } from 'zod';
 import { blackListPasswords } from '@/shared/constants/black-list-passwords';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -36,12 +36,7 @@ type FormData = z.infer<typeof baseSchema>;
 const createSchemaWithContext = (
   firstName: string,
   lastName: string,
-): ZodEffects<
-  ZodObject<{
-    password: ZodEffects<ZodString, string, string>;
-    confirmPassword: ZodString;
-  }>
-> =>
+) =>
   baseSchema.superRefine(({ password, confirmPassword }, ctx) => {
     if (password.includes(firstName) && firstName.length) {
       ctx.addIssue({
